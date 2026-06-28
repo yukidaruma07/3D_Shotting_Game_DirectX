@@ -37,8 +37,8 @@ private:
 	int vertexCount_;
 	int polygonCount_;
 	int indexCount_;
-	MATERIAL* materials_; //マテリアルの配列データ（※数は分からないため、ポインタ）
-	Vertex* vertices_; //頂点の配列データ（※数は分からないため、ポインタ）
+	std::vector<MATERIAL> materials_; //マテリアルの配列データ（※数は分からないため、ポインタ）
+	std::vector<Vertex> vertices_; //頂点の配列データ（※数は分からないため、ポインタ）
 public:
 	FBX(const std::string fName);
 	~FBX();
