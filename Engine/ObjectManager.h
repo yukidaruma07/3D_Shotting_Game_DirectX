@@ -5,7 +5,6 @@
 namespace ObjectManager {
     inline std::vector<BaseObject*> objList;
 
-    void InitManager();
     void AddObject(BaseObject* obj);
     void RemoveObject(BaseObject* obj);
     void ClearObject();
