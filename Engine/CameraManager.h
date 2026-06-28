@@ -8,6 +8,7 @@ private:
 	DirectX::XMFLOAT3 cameraPostion_;
 	DirectX::XMFLOAT3 foucusPostion_;
 	DirectX::XMFLOAT3 upDirection_;
+	DirectX::XMMATRIX projection_;
 public:
 
 	Camera(std::string name) {
@@ -15,6 +16,7 @@ public:
 		cameraPostion_ = { 0.0f, 0.0f, -5.0f };
 		foucusPostion_ = { 0.0f, 2.0f, 0.0f };
 		upDirection_ = { 0.0f, 1.0f, 0.0f };
+		projection_ = DirectX::XMMatrixIdentity();
 	}
 
 	Camera(std::string name, DirectX::XMFLOAT3 cameraPos, DirectX::XMFLOAT3 foucusPos) {
@@ -22,6 +24,7 @@ public:
 		this->cameraPostion_ = cameraPos;
 		this->foucusPostion_ = foucusPos;
 		this->upDirection_ = { 0.0f, 1.0f, 0.0f };
+		projection_ = DirectX::XMMatrixIdentity();
 	}
 
 	inline std::string getName() { return name_; }
@@ -63,6 +66,14 @@ public:
 	/// </summary>
 	inline void setFoucsPostion(DirectX::XMFLOAT3 foucsPos) {
 		this->foucusPostion_ = foucsPos;
+	}
+
+	inline DirectX::XMMATRIX GetProjection() {
+		return projection_;
+	}
+
+	inline void SetProjection(DirectX::XMMATRIX matrix) {
+		this->projection_ = matrix;
 	}
 };
 

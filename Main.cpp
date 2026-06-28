@@ -47,6 +47,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	AudioManager::InitManager();
 	CameraManager::addCamera("RootCamera");
 	CameraManager::setCurentCamera("RootCamera");
+	auto currentCamera = CameraManager::getCurentCamera();
+	currentCamera->SetProjection(DirectX::XMMatrixPerspectiveFovLH(DirectX::XMConvertToRadians(60.0f), 1280.0f / 720.0f, 0.1f, 100.0f));
+	//DirectX::XMMatrixPerspectiveFovLH(XMConvertToRadians(90.0f), 1280.0f / 720.0f, 0.1f, 100.0f);
 
 	MSG msg = {};
 	while (msg.message != WM_QUIT) {

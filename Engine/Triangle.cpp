@@ -53,11 +53,7 @@ void Triangle::Update() {
 	XMMATRIX transMat = XMMatrixTranslation(postion_.x, postion_.y, postion_.z);
 	XMMATRIX world = scaleMat * rotMat * transMat;
 	XMMATRIX view = camera->getMatrix();
-	XMMATRIX projection = XMMatrixOrthographicOffCenterLH(
-		0.0f, 1280.0f,
-		720.0f, 0.0f,
-		0.0f, 100.0f
-	);
+	XMMATRIX projection = camera->GetProjection();
 
 	ConstantBuffer cb = {};
 	cb.wvpMat = XMMatrixTranspose(world * view * projection);

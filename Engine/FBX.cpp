@@ -164,12 +164,13 @@ void FBX::InitMaterial(fbxsdk::FbxNode* node) {
 }
 
 void FBX::Update() {
+	auto currentCamera = CameraManager::getCurentCamera();
 	XMMATRIX scaleMat = XMMatrixScaling(scale_.x, scale_.y, scale_.z);
 	XMMATRIX rotMat = XMMatrixRotationZ(rotation_.z) * XMMatrixRotationX(rotation_.x) * XMMatrixRotationY(rotation_.y);
 	XMMATRIX transMat = XMMatrixTranslation(postion_.x, postion_.y, postion_.z);
 	XMMATRIX world = scaleMat * rotMat * transMat;
-	XMMATRIX view = CameraManager::getCurentCamera()->getMatrix();
-	XMMATRIX projection = DirectX::XMMatrixPerspectiveFovLH(XMConvertToRadians(90.0f), 1280.0f / 720.0f, 0.1f, 100.0f);
+	XMMATRIX view = currentCamera->getMatrix();
+	XMMATRIX projection = currentCamera->GetProjection();
 
 	ConstantBuffer cb = {};
 	for (int i = 0; i < materialCount_; i++) {
