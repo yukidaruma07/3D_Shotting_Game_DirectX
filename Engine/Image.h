@@ -14,6 +14,7 @@ private:
 	UINT width_, height_;
 	std::string path_;
 
+	ID3D11Texture2D* texture2D_ = nullptr;
 	ID3D11SamplerState* samplerState_ = nullptr;
 	ID3D11ShaderResourceView* shaderResourceView_ = nullptr;
 	ID3D11Buffer* constantBuffer_ = nullptr;

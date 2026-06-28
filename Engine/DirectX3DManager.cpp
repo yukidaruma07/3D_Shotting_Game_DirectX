@@ -14,6 +14,9 @@ namespace DirectX3DManager {
 	inline IDXGISwapChain* swapChain_ = nullptr;
 	inline ID3D11RenderTargetView* renderTargetView_ = nullptr;
 	inline ID3D11Texture2D* texture2D_ = nullptr;
+	inline ID3D11Texture2D* depthStencilTexture_ = nullptr;
+	inline ID3D11DepthStencilState* depthState_ = nullptr;
+	inline ID3D11DepthStencilView* pDepthStencilView = nullptr;
 	inline ID3D11RasterizerState* rasterizerState_ = nullptr;
 	inline ID3D11BlendState* blendState = nullptr;
 
@@ -53,6 +56,28 @@ namespace DirectX3DManager {
 
 		swapChain_->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&texture2D_);
 		d3d11Device_->CreateRenderTargetView(texture2D_, NULL, &renderTargetView_);
+
+		D3D11_TEXTURE2D_DESC depthTexDesc = {};
+		depthTexDesc.Width = GameEngine::DEFAULT_WIDTH;
+		depthTexDesc.Height = GameEngine::DEFAULT_HEIGHT;
+		depthTexDesc.MipLevels = 1;
+		depthTexDesc.ArraySize = 1;
+		depthTexDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthTexDesc.SampleDesc.Count = 1;
+		depthTexDesc.SampleDesc.Quality = 0;
+		depthTexDesc.Usage = D3D11_USAGE_DEFAULT;
+		depthTexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		depthTexDesc.CPUAccessFlags = 0;
+
+		GetDevice()->CreateTexture2D(&depthTexDesc, nullptr, &depthStencilTexture_);
+
+		//深度ステンシルビューの作成
+		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc = {};
+		depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		depthStencilViewDesc.Texture2D.MipSlice = 0;
+
+		GetDevice()->CreateDepthStencilView(depthStencilTexture_, &depthStencilViewDesc, &pDepthStencilView);
 
 		//参考： https://learn.microsoft.com/ja-jp/windows/win32/api/d3d11/ns-d3d11-d3d11_viewport
 		// ビューポート：描画する範囲的なもの
@@ -110,6 +135,11 @@ namespace DirectX3DManager {
 	ID3D11Texture2D* DirectX3DManager::GetTexture2D() { return texture2D_; }
 
 	ID3D11RasterizerState* DirectX3DManager::GetRasterizer() { return rasterizerState_; }
+
+	ID3D11DepthStencilView* DirectX3DManager::GetDepthView()
+	{
+		return pDepthStencilView;
+	}
 
 }
 

@@ -62,20 +62,6 @@ void Image::Init() {
 	);
 	pConverter->GetSize(&width_, &height_);
 
-	//参考： https://learn.microsoft.com/ja-jp/windows/win32/api/d3d11/ns-d3d11-d3d11_texture2d_desc
-	D3D11_TEXTURE2D_DESC desc = {};
-	desc.Width = width_;
-	desc.Height = height_;
-	desc.MipLevels = 1;
-	desc.ArraySize = 1;
-	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	desc.SampleDesc.Count = 1;
-	desc.SampleDesc.Quality = 0;
-	desc.Usage = D3D11_USAGE_DEFAULT;
-	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-	desc.CPUAccessFlags = 0;
-	desc.MipLevels = 1;
-
 	std::vector<BYTE> TextureData;
 	size_t rowBytes = static_cast<size_t>(width_) * 4;
 	size_t TextureSize = rowBytes * static_cast<size_t>(height_);
@@ -87,19 +73,12 @@ void Image::Init() {
 	textureData.pSysMem = TextureData.data();
 	textureData.SysMemPitch = static_cast<UINT>(rowBytes);
 
-	auto texture2D = GetTexture2D();
-	GetDevice()->CreateTexture2D(
-		&desc,
-		&textureData,
-		&texture2D
-	);
-
 	// 参考： https://learn.microsoft.com/ja-jp/windows/win32/api/d3d11/ns-d3d11-d3d11_shader_resource_view_desc
 	D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc = {};
 	viewDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	viewDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
 	viewDesc.Texture2D.MipLevels = 1;
-	GetDevice()->CreateShaderResourceView(texture2D, &viewDesc, &shaderResourceView_);
+	GetDevice()->CreateShaderResourceView(texture2D_, &viewDesc, &shaderResourceView_);
 
 	// 参考： https://learn.microsoft.com/ja-jp/windows/win32/api/d3d11/ns-d3d11-d3d11_sampler_desc
 	D3D11_SAMPLER_DESC samplerDesc = {};
