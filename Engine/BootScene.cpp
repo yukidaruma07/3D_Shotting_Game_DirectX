@@ -5,6 +5,7 @@
 #include "LoggerManager.h"
 #include "FBX.h"
 #include "Box.h"
+#include "SceneManager.h"
 
 BootScene::BootScene()
 	: BaseScene("BootScene") {
@@ -31,6 +32,7 @@ void BootScene::Init() {
 }
 
 void BootScene::Update() {
+	SceneManager::ChangeScene("TitleScene");
 }
 
 void BootScene::Draw() {

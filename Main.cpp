@@ -78,10 +78,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			#ifdef _DEBUG
 				DirectX2DManager::DrawFontText(0, 0, L"あああ");
 
+				auto currentScene = SceneManager::GetCurrentScene();
 				auto currentCamera = CameraManager::getCurentCamera();
 				auto cameraPos = currentCamera->getCameraPostion();
 				auto targetPos = currentCamera->getFoucsPostion();
 				ImGui::Begin("Main");
+				ImGui::Text("Scene: %s", currentScene == nullptr ? "" : currentScene->GetName().c_str());
 				ImGui::Text("DeltaTime: %2.2f", GameEngine::GetDeltaTime());
 				ImGui::Text("Camera: %s", currentCamera == nullptr ? "" : currentCamera->getName().c_str());
 				if (currentCamera != nullptr) {

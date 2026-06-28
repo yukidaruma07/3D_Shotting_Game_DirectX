@@ -87,6 +87,15 @@
     <ClCompile Include="Engine\Box.cpp">
       <Filter>Engine\Object</Filter>
     </ClCompile>
+    <ClCompile Include="TitleScene.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="RunningScene.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="ClearScene.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImGUI\imgui.h">
@@ -182,6 +191,15 @@
     <ClInclude Include="Engine\Box.h">
       <Filter>Engine\Object</Filter>
     </ClInclude>
+    <ClInclude Include="TitleScene.h">
+      <Filter>Source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="RunningScene.h">
+      <Filter>Source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="ClearScene.h">
+      <Filter>Source\Scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">
@@ -204,6 +222,15 @@
     </Filter>
     <Filter Include="Engine\Scene">
       <UniqueIdentifier>{501adf3f-be7b-482f-84fe-f81ab2ceef17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source">
+      <UniqueIdentifier>{2ae4c4f3-2740-4a72-8db0-8e97ee4ac53a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene">
+      <UniqueIdentifier>{e02e3857-c9ce-4de2-9e3e-95b14158c4d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Object">
+      <UniqueIdentifier>{2e44b09f-6b47-4633-8782-7d4bffd9525f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
