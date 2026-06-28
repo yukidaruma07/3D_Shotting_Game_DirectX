@@ -38,6 +38,10 @@ void FBX::Init() {
 	fbxImporter_->Import(fbxScene);
 	fbxImporter_->Destroy();
 
+
+	FbxGeometryConverter converter(fbxManager_);
+	converter.Triangulate(fbxScene, true);
+
 	FbxNode* rootNode = fbxScene->GetRootNode();
 	FbxNode* node = rootNode->GetChild(0); //結合済み前提
 	FbxMesh* mesh = nullptr;
