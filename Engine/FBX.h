@@ -4,6 +4,7 @@
 #include <DirectXMath.h>
 #include <d3d11.h>
 #include <string>
+#include <vector>
 #include "fbxsdk.h"
 #include "Texture.h"
 #pragma comment(lib, "LibFbxSDK-MD.lib")
@@ -30,6 +31,8 @@ private:
 	FbxManager* fbxManager_;
 	FbxImporter* fbxImporter_;
 	int* index_;
+	std::vector<int> indexMaterialCount_;
+
 	int materialCount_;
 	int vertexCount_;
 	int polygonCount_;

@@ -53,6 +53,7 @@ void FBX::Init() {
 	vertexCount_ = mesh->GetControlPointsCount();	//頂点数を取得する
 	polygonCount_ = mesh->GetPolygonCount();		//ポリゴンを取得する
 	materialCount_ = node->GetMaterialCount();		//マテリアルを取得する
+	indexMaterialCount_.resize(materialCount_);
 
 	InitVertex(mesh);		//頂点バッファを初期化する
 	InitIndex(mesh);		//インデックスバッファを初期化する
@@ -109,6 +110,8 @@ void FBX::InitIndex(FbxMesh* mesh) {
 			}
 
 		}
+
+		indexMaterialCount_[i] = count;
 
 		D3D11_BUFFER_DESC bd = {};
 		bd.ByteWidth = sizeof(int) * count;
@@ -201,7 +204,7 @@ void FBX::Draw() {
 		GetContext()->VSSetConstantBuffers(0, 1, &pConstantBuffer_);
 
 		GetContext()->RSSetState(GetRasterizer());
-		GetContext()->DrawIndexed(polygonCount_ * 3, 0, 0);
+		GetContext()->DrawIndexed(indexMaterialCount_[i], 0, 0);
 		GetContext()->RSSetState(nullptr);
 	}
 }
