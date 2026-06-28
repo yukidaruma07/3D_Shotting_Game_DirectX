@@ -1,8 +1,10 @@
 #include "Bullet.h"
+#include "Engine//CircleCollider.h"
 
 Bullet::Bullet(DirectX::XMFLOAT3 postion)
 	: BaseObject("Bullet") {
 	postion_ = postion;
+	velocity_ = { 3.0f, 3.0f, 3.0f };
 	fbxModel_ = nullptr;
 }
 
@@ -13,6 +15,7 @@ Bullet::~Bullet() {
 void Bullet::Init() {
 	fbxModel_ = new FBX("Asset/bullet.fbx");
 	fbxModel_->Init();
+	colliderList.push_back(new CircleCollider(this, 1.0f));
 }
 
 void Bullet::Update() {
@@ -22,6 +25,8 @@ void Bullet::Update() {
 		fbxModel_->SetScale(scale_);
 		fbxModel_->SetRotation(rotation_);
 	}
+
+	postion_.z += velocity_.z;
 }
 
 void Bullet::Draw() {
@@ -31,4 +36,10 @@ void Bullet::Draw() {
 }
 
 void Bullet::Release() {
+}
+
+void Bullet::OnCollide(BaseObject* obj)	{
+	if (obj->GetName() == "Enemy") {
+		KillMe();
+	}
 }

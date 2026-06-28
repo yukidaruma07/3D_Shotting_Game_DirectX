@@ -8,8 +8,9 @@ class CircleCollider;
 
 class BaseObject {
 private:
-    std::vector<CircleCollider*> colliderList;
+    
 protected:
+    std::vector<CircleCollider*> colliderList;
     std::string name_;
     bool isDead_;
     bool isShowImGUI_;

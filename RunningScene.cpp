@@ -13,9 +13,9 @@ RunningScene::~RunningScene() {
 }
 
 void RunningScene::Init() {
+	ObjectManager::AddObject(new Enemy({ 0, 0, 20 }));
 	ObjectManager::AddObject(new Player({}));
-	ObjectManager::AddObject(new Bullet({}));
-	ObjectManager::AddObject(new Enemy({}));
+	//ObjectManager::AddObject(new Bullet({}));
 }
 
 void RunningScene::Update() {

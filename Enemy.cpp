@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "Engine//CircleCollider.h"
 
 Enemy::Enemy(DirectX::XMFLOAT3 postion)
 	: BaseObject("Enemy") {
@@ -13,6 +14,7 @@ Enemy::~Enemy() {
 void Enemy::Init() {
 	fbxModel_ = new FBX("Asset/enemy.fbx");
 	fbxModel_->Init();
+	colliderList.push_back(new CircleCollider(this, 1.0f));
 }
 
 void Enemy::Update() {

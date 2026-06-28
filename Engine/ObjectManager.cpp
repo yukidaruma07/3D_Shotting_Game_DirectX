@@ -49,8 +49,10 @@ void ObjectManager::UpdateCollider() {
             
             bool isHit = false;
             for (CircleCollider* cirlceCol1 : obj1->GetColiderList()) {
+                cirlceCol1->Update();
                 for (CircleCollider* cirlceCol2 : obj2->GetColiderList()) {
-                    isHit = cirlceCol1->IsCircle(cirlceCol2);
+                    cirlceCol2->Update();
+                    isHit = cirlceCol1->IsCircle(cirlceCol2) && cirlceCol2->IsCircle(cirlceCol1);
                 }
             }
 
