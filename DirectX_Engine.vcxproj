@@ -24,6 +24,7 @@
     <ProjectGuid>{1d84a6b2-eda9-4619-87a1-079408a55649}</ProjectGuid>
     <RootNamespace>DirectXEngine</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>3D_Shooting_DirectX</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
