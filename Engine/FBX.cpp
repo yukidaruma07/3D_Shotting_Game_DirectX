@@ -7,6 +7,8 @@
 #include "../ImGUI/imgui.h"
 #include "CameraManager.h"
 #include "../GameEngine.hpp"
+#include "LoggerManager.h"
+
 using namespace DirectX3DManager;
 
 using namespace fbxsdk;
@@ -66,15 +68,30 @@ void FBX::Init() {
 }
 
 void FBX::InitVertex(FbxMesh* mesh) {
+
+	FbxNode* node = mesh->GetNode();
+	FbxAMatrix geomTransform = {};
+	// ジオメトリ変換
+	FbxVector4 geoT = node->GetGeometricTranslation(FbxNode::eSourcePivot);
+	FbxVector4 geoR = node->GetGeometricRotation(FbxNode::eSourcePivot);
+	FbxVector4 geoS = node->GetGeometricScaling(FbxNode::eSourcePivot);
+	geomTransform.SetT(geoT);
+	geomTransform.SetR(geoR);
+	geomTransform.SetS(geoS);
+
+	FbxAMatrix globalTransform = node->EvaluateGlobalTransform() * geomTransform;
+
 	for (DWORD poly = 0; poly < polygonCount_; poly++) {	//ポリゴン分ループする
 		for (int vertexCount = 0; vertexCount < 3; vertexCount++) {		//頂点分ループする（※結合済み前提
 			Vertex vertex = {};
 
 			int index = mesh->GetPolygonVertex(poly, vertexCount);
-			FbxVector4 pos = mesh->GetControlPointAt(index);	//頂点座標を取得する
-			vertex.postion.x = (float)pos[0];			//頂点のX座標を代入する
-			vertex.postion.y = (float)pos[1];			//頂点のY座標を代入する
-			vertex.postion.z = (float)pos[2];			//頂点のZ座標を代入する
+			FbxVector4 pos = mesh->GetControlPointAt(index);	//頂点座標（ローカル）
+			FbxVector4 worldPos = globalTransform.MultT(pos);
+
+			vertex.postion.x = (float)worldPos[0];			//頂点のX座標を代入する
+			vertex.postion.y = (float)worldPos[1];			//頂点のY座標を代入する
+			vertex.postion.z = (float)worldPos[2];			//頂点のZ座標を代入する
 
 			FbxLayerElementUV* uvLayer = mesh->GetLayer(0)->GetUVs();
 			int uvIndex = mesh->GetTextureUVIndex(poly, vertexCount);
@@ -100,7 +117,7 @@ void FBX::InitVertex(FbxMesh* mesh) {
 
 void FBX::InitIndex(FbxMesh* mesh) {
 	pIndexBuffer_ = new ID3D11Buffer*[materialCount_];
-	index_ = new int[polygonCount_ * 3];
+	index_.resize((size_t) polygonCount_ * 3);
 
 	for (int i = 0; i < materialCount_; i++) {
 		int count = 0;
@@ -111,7 +128,7 @@ void FBX::InitIndex(FbxMesh* mesh) {
 
 			if (materialId == i) {
 				for (DWORD vertex = 0; vertex < 3; vertex++) {
-					index_[count] = mesh->GetPolygonVertex(poly, vertex);
+					index_[i].push_back(poly * 3 + vertex);
 					count++;
 				}
 			}
@@ -126,7 +143,7 @@ void FBX::InitIndex(FbxMesh* mesh) {
 		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
 		D3D11_SUBRESOURCE_DATA data = {};
-		data.pSysMem = index_;				//インデックスバッファ
+		data.pSysMem = index_[i].data();				//インデックスバッファ
 
 		HRESULT hr = GetDevice()->CreateBuffer(&bd, &data, &pIndexBuffer_[i]);
 	}
@@ -188,10 +205,13 @@ void FBX::Draw() {
 	UINT offset = 0;
 	ID3D11ShaderResourceView* nullSRV[1] = { nullptr };
 
+	GetContext()->RSSetState(GetRasterizer());
+	GetContext()->IASetInputLayout(ShaderManager::inputLayout_);
+	GetContext()->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
+	GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	GetContext()->VSSetShader(ShaderManager::vertexShader_, nullptr, 0);
 	GetContext()->PSSetShader(ShaderManager::pixelShader_, nullptr, 0);
-	GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	GetContext()->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
+		
 	for (int i = 0; i < materialCount_; i++) {
 		GetContext()->IASetIndexBuffer(pIndexBuffer_[i], DXGI_FORMAT_R32_UINT, 0);
 		if (!isShowTexture_) {
@@ -211,8 +231,7 @@ void FBX::Draw() {
 		}
 
 		GetContext()->VSSetConstantBuffers(0, 1, &pConstantBuffer_);
-
-		GetContext()->RSSetState(GetRasterizer());
+		
 		GetContext()->DrawIndexed(indexMaterialCount_[i], 0, 0);
 
 		GetContext()->RSSetState(nullptr);

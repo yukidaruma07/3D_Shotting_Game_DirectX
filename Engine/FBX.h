@@ -30,7 +30,7 @@ private:
 
 	FbxManager* fbxManager_;
 	FbxImporter* fbxImporter_;
-	int* index_;
+	std::vector<std::vector<int>> index_;
 	std::vector<int> indexMaterialCount_;
 
 	int materialCount_;
