@@ -71,13 +71,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			ImGui_ImplWin32_NewFrame();
 			ImGui::NewFrame();
 
+			InputManager::update();
 			SceneManager::UpdateScene();
 			SceneManager::DrawScene();
 			ObjectManager::UpdateManager();
 
-			#ifdef _DEBUG
-				DirectX2DManager::DrawFontText(0, 0, L"あああ");
-
+			#ifdef _DEBUG				
 				auto currentScene = SceneManager::GetCurrentScene();
 				auto currentCamera = CameraManager::getCurentCamera();
 				auto cameraPos = currentCamera->getCameraPostion();
