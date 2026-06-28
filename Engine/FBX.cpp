@@ -15,7 +15,7 @@ using namespace DirectX;
 FBX::FBX(const std::string fName)
 	: BaseObject("FBX") {
 	this->path_ = fName;
-	isShowTexture_ = true;
+	isShowTexture_ = false;
 	indexCount_ = -1;
 	materialCount_ = -1;
 	polygonCount_ = -1;
@@ -40,7 +40,15 @@ void FBX::Init() {
 
 	FbxNode* rootNode = fbxScene->GetRootNode();
 	FbxNode* node = rootNode->GetChild(0); //結合済み前提
-	FbxMesh* mesh = node->GetMesh();
+	FbxMesh* mesh = nullptr;
+	for (int i = 0; i < rootNode->GetChildCount(); i++) {
+		FbxNode* childNode = rootNode->GetChild(i);
+		if (childNode->GetMesh() != nullptr) {
+			mesh = childNode->GetMesh();
+			node = childNode;
+			break;
+		}
+	}
 
 	vertexCount_ = mesh->GetControlPointsCount();	//頂点数を取得する
 	polygonCount_ = mesh->GetPolygonCount();		//ポリゴンを取得する
@@ -103,7 +111,7 @@ void FBX::InitIndex(FbxMesh* mesh) {
 		}
 
 		D3D11_BUFFER_DESC bd = {};
-		bd.ByteWidth = sizeof(int) * polygonCount_ * 3;
+		bd.ByteWidth = sizeof(int) * count;
 		bd.Usage = D3D11_USAGE_DEFAULT;
 		bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
@@ -173,13 +181,13 @@ void FBX::Draw() {
 	GetContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	GetContext()->IASetVertexBuffers(0, 1, &pVertexBuffer_, &stride, &offset);
 	for (int i = 0; i < materialCount_; i++) {
+		GetContext()->IASetIndexBuffer(pIndexBuffer_[i], DXGI_FORMAT_R32_UINT, 0);
 		if (!isShowTexture_) {
 			GetContext()->PSSetShaderResources(0, 1, nullSRV);
 			GetContext()->PSSetShader(ShaderManager::pixelDebugShader_, nullptr, 0);
 		}
 		else {
 			if (materials_[i].texture != nullptr) {
-				GetContext()->IASetIndexBuffer(pIndexBuffer_[i], DXGI_FORMAT_R32_UINT, 0);
 				auto srv = (materials_[i].texture->GetShaderReasourceView());
 				auto samplerState = materials_[i].texture->GetSampleState();
 				GetContext()->PSSetShaderResources(0, 1, &srv);
