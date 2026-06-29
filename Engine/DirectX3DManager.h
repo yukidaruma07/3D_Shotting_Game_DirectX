@@ -62,6 +62,7 @@ namespace ShaderManager {
 	inline ID3D11VertexShader* vertexShader_ = nullptr;
 	inline ID3D11PixelShader* pixelShader_ = nullptr;
 	inline ID3D11PixelShader* pixelDebugShader_ = nullptr;
+	inline ID3D11PixelShader* grayPixelShader_ = nullptr;
 	inline ID3D11InputLayout* inputLayout_ = nullptr;
 
 	void InitShader();
