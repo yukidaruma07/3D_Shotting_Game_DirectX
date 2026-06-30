@@ -1,4 +1,4 @@
-#include "FBX.h"
+﻿#include "FBX.h"
 #include "fbxsdk.h"
 #include "DirectX3DManager.h"
 #include "BootScene.h"
@@ -23,7 +23,6 @@ FBX::FBX(const std::string fName)
 	polygonCount_ = -1;
 	vertexCount_ = -1;
 	materials_.clear();
-	pConstantBuffer_ = nullptr;
 	pIndexBuffer_ = nullptr;
 	pVertexBuffer_ = nullptr;
 	vertices_.clear();
@@ -38,8 +37,6 @@ void FBX::Init() {
 	fbxImporter_->Initialize(path_.c_str(), -1, fbxManager_->GetIOSettings());
 	FbxScene* fbxScene = FbxScene::Create(fbxManager_, "fbxscene");
 	fbxImporter_->Import(fbxScene);
-	fbxImporter_->Destroy();
-
 
 	FbxGeometryConverter converter(fbxManager_);
 	converter.Triangulate(fbxScene, true);
@@ -70,16 +67,11 @@ void FBX::Init() {
 void FBX::InitVertex(FbxMesh* mesh) {
 
 	FbxNode* node = mesh->GetNode();
-	FbxAMatrix geomTransform = {};
-	// ジオメトリ変換
-	FbxVector4 geoT = node->GetGeometricTranslation(FbxNode::eSourcePivot);
-	FbxVector4 geoR = node->GetGeometricRotation(FbxNode::eSourcePivot);
-	FbxVector4 geoS = node->GetGeometricScaling(FbxNode::eSourcePivot);
-	geomTransform.SetT(geoT);
-	geomTransform.SetR(geoR);
-	geomTransform.SetS(geoS);
 
-	FbxAMatrix globalTransform = node->EvaluateGlobalTransform() * geomTransform;
+	FbxLayer* layer = mesh->GetLayer(0);
+	FbxLayerElementMaterial* matLayer = layer->GetMaterials();
+	FbxLayerElement::EMappingMode mapping = matLayer->GetMappingMode();
+
 
 	for (DWORD poly = 0; poly < polygonCount_; poly++) {	//ポリゴン分ループする
 		for (int vertexCount = 0; vertexCount < 3; vertexCount++) {		//頂点分ループする（※結合済み前提
@@ -87,11 +79,13 @@ void FBX::InitVertex(FbxMesh* mesh) {
 
 			int index = mesh->GetPolygonVertex(poly, vertexCount);
 			FbxVector4 pos = mesh->GetControlPointAt(index);	//頂点座標（ローカル）
-			FbxVector4 worldPos = globalTransform.MultT(pos);
 
-			vertex.postion.x = (float)worldPos[0];			//頂点のX座標を代入する
-			vertex.postion.y = (float)worldPos[1];			//頂点のY座標を代入する
-			vertex.postion.z = (float)worldPos[2];			//頂点のZ座標を代入する
+			LoggerManager::InfoDebug(fbxImporter_->GetFileName().Buffer());
+			LoggerManager::InfoDebug(std::to_string(vertexCount) + "ローカル座標：" + std::to_string((float)pos[0]) + "," + std::to_string((float)pos[1]) + "," + std::to_string((float)pos[2]));
+
+			vertex.postion.x = (float)pos[0];			//頂点のX座標を代入する
+			vertex.postion.y = (float)pos[1];			//頂点のY座標を代入する
+			vertex.postion.z = (float)pos[2];			//頂点のZ座標を代入する
 
 			FbxLayerElementUV* uvLayer = mesh->GetLayer(0)->GetUVs();
 			int uvIndex = mesh->GetTextureUVIndex(poly, vertexCount);
@@ -150,11 +144,14 @@ void FBX::InitIndex(FbxMesh* mesh) {
 }
 
 void FBX::InitConstantBuffer() {
-	D3D11_BUFFER_DESC constantBufferDesc = {};
-	constantBufferDesc.ByteWidth = sizeof(ConstantBuffer);
-	constantBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	HRESULT hr = GetDevice()->CreateBuffer(&constantBufferDesc, nullptr, &pConstantBuffer_);
+	pMaterialConstantBuffers_.resize(materialCount_);
+	for (int i = 0; i < materialCount_; i++) {
+		D3D11_BUFFER_DESC constantBufferDesc = {};
+		constantBufferDesc.ByteWidth = sizeof(ConstantBuffer);
+		constantBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+		constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		HRESULT hr = GetDevice()->CreateBuffer(&constantBufferDesc, nullptr, &pMaterialConstantBuffers_[i]);
+	}
 }
 
 void FBX::InitMaterial(fbxsdk::FbxNode* node) {
@@ -189,13 +186,12 @@ void FBX::Update() {
 	XMMATRIX view = currentCamera->getMatrix();
 	XMMATRIX projection = currentCamera->GetProjection();
 
-	ConstantBuffer cb = {};
 	for (int i = 0; i < materialCount_; i++) {
-		auto material = materials_[i];
+		ConstantBuffer cb = {};
 		cb.wvpMat = XMMatrixTranspose(world * view * projection);
-		cb.diffUse = material.diffuse;
-		cb.isTexture = material.texture != nullptr ? TRUE : FALSE;
-		GetContext()->UpdateSubresource(pConstantBuffer_, 0, nullptr, &cb, 0, 0);
+		cb.diffUse = materials_[i].diffuse;
+		cb.isTexture = materials_[i].texture != nullptr ? TRUE : FALSE;
+		GetContext()->UpdateSubresource(pMaterialConstantBuffers_[i], 0, nullptr, &cb, 0, 0);
 	}
 
 }
@@ -216,7 +212,7 @@ void FBX::Draw() {
 		GetContext()->IASetIndexBuffer(pIndexBuffer_[i], DXGI_FORMAT_R32_UINT, 0);
 		if (!isShowTexture_) {
 			GetContext()->PSSetShaderResources(0, 1, nullSRV);
-			GetContext()->PSSetShader(ShaderManager::pixelDebugShader_, nullptr, 0);
+			GetContext()->PSSetShader(ShaderManager::pixelShader_, nullptr, 0);
 		}
 		else {
 			if (materials_[i].texture != nullptr) {
@@ -230,12 +226,14 @@ void FBX::Draw() {
 			}
 		}
 
-		GetContext()->VSSetConstantBuffers(0, 1, &pConstantBuffer_);
+		GetContext()->PSSetConstantBuffers(0, 1, &pMaterialConstantBuffers_[i]);
+		GetContext()->VSSetConstantBuffers(0, 1, &pMaterialConstantBuffers_[i]);
 		
 		GetContext()->DrawIndexed(indexMaterialCount_[i], 0, 0);
 
-		GetContext()->RSSetState(nullptr);
+		
 	}
+	GetContext()->RSSetState(nullptr);
 }
 
 void FBX::Release() {

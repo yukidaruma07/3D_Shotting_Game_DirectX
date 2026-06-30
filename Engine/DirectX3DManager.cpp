@@ -196,11 +196,6 @@ namespace ShaderManager {
 			NULL,
 			&pixelShader_);
 
-		DirectX3DManager::GetDevice()->CreatePixelShader(
-			psBlobDebug->GetBufferPointer(), psBlobDebug->GetBufferSize(),
-			NULL,
-			&pixelDebugShader_);
-
 		/// 参考：https://learn.microsoft.com/ja-jp/windows/win32/api/d3d11/ns-d3d11-d3d11_input_element_desc
 		D3D11_INPUT_ELEMENT_DESC layout[] = {
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0, offsetof(Vertex, postion), D3D11_INPUT_PER_VERTEX_DATA, 0 },
