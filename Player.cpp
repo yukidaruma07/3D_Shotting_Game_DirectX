@@ -6,7 +6,7 @@
 Player::Player(DirectX::XMFLOAT3 postion)
 	: BaseObject("Player") {
 	postion_ = postion;
-	velocity_ = { 5.0f, 5.0f, 5.0f };
+	velocity_ = { 0.1f, 0.1f, 0.1f };
 	scale_ = { 0.05, 0.5, 0.05 };
 	fbxModel_ = nullptr;
 }
