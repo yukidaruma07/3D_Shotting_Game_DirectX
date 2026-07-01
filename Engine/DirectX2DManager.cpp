@@ -12,7 +12,7 @@ namespace DirectX2DManager {
 
 	inline const WCHAR* DEFAULT_FONT = L"メイリオ";
 	inline int DEFAULT_FONT_SIZE = 30;
-	inline D2D1_COLOR_F DEFAULT_COLOR = D2D1::ColorF(1.0, 1.0, 1.0, 1.0);
+	inline D2D1_COLOR_F DEFAULT_COLOR = D2D1::ColorF(0.0, 0.0, 0.0, 1.0);
 	IDWriteTextFormat* textFormat = nullptr;
 	ID2D1SolidColorBrush* brush = nullptr;
 
