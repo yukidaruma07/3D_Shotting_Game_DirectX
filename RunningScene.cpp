@@ -6,6 +6,7 @@
 #include "Enemy.h"
 #include "Engine/DirectX2DManager.h"
 #include "GameEngine.hpp"
+#include "Engine/SceneManager.h"
 
 using namespace DirectX2DManager;
 
@@ -29,6 +30,10 @@ void RunningScene::Init() {
 
 void RunningScene::Update() {
 	time_ -= GameEngine::GetDeltaTime();
+
+	if (time_ <= 0) {
+		SceneManager::ChangeScene("ClearScene");
+	}
 }
 
 void RunningScene::Draw() {
