@@ -4,7 +4,8 @@
 Bullet::Bullet(DirectX::XMFLOAT3 postion)
 	: BaseObject("Bullet") {
 	postion_ = postion;
-	velocity_ = { 3.0f, 3.0f, 3.0f };
+	velocity_ = { 0.1f, 0.1f, 0.1f };
+	scale_ = { 0.5, 0.5, 0.5 };
 	fbxModel_ = nullptr;
 }
 

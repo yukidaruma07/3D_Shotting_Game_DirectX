@@ -36,7 +36,10 @@ bool CircleCollider::IsCircle(CircleCollider* circleCol) {
 	XMVECTOR vectorA = XMLoadFloat3(&aPos);
 	XMVECTOR vectorB = XMLoadFloat3(&bPos);
 
-	if (XMVectorGetX(XMVector2Length(vectorA - vectorB)) < radius_ + circleCol->GetRadius()) {
+	XMVECTOR diff = XMVectorSubtract(vectorA, vectorB);
+	float distance = XMVectorGetX(XMVector3Length(diff));
+	const float merge = radius_ + circleCol->GetRadius();
+	if (distance < merge) {
 		return true;
 	}
 	return false;

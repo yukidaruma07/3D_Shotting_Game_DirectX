@@ -22,9 +22,12 @@ void Player::Init() {
 }
 
 void Player::Update() {
-	if (InputManager::IsPushKey(DIK_SPACE)) {
+	static bool beforeKey = false;
+	if (InputManager::IsPushKey(DIK_SPACE) && !beforeKey) {
 		ObjectManager::AddObject(new Bullet(postion_));
 	}
+	beforeKey = InputManager::IsPushKey(DIK_SPACE);
+
 	if (InputManager::IsPushKey(DIK_UP)) {
 		postion_.z += velocity_.z;
 	}
