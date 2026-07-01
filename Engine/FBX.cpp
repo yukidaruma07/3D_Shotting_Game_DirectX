@@ -39,16 +39,16 @@ void FBX::Init() {
 	fbxImporter_->Import(fbxScene);
 
 	FbxGeometryConverter converter(fbxManager_);
-	converter.Triangulate(fbxScene, true);
+	converter.Triangulate(fbxScene, true);	// fbxを三角化する
 
 	FbxNode* rootNode = fbxScene->GetRootNode();
 	FbxNode* node = rootNode->GetChild(0); //結合済み前提
 	FbxMesh* mesh = nullptr;
-	for (int i = 0; i < rootNode->GetChildCount(); i++) {
-		FbxNode* childNode = rootNode->GetChild(i);
-		if (childNode->GetMesh() != nullptr) {
-			mesh = childNode->GetMesh();
-			node = childNode;
+	for (int i = 0; i < rootNode->GetChildCount(); i++) {	// 根っこから子ノードをループする
+		FbxNode* childNode = rootNode->GetChild(i);	// 子ノード
+		if (childNode->GetMesh() != nullptr) {	// メッシュがnullじゃなくなるまで
+			mesh = childNode->GetMesh();	// メッシュを代入
+			node = childNode;	// メッシュがnullじゃないときの、ノードを代入する
 			break;
 		}
 	}
