@@ -149,7 +149,6 @@ namespace ShaderManager {
 		ID3DBlob* vsBlob = nullptr; 
 		ID3DBlob* psBlobDebug = nullptr;
 		ID3DBlob* psBlob = nullptr; 
-		ID3DBlob* grayPsBlob = nullptr;
 
 		D3DCompileFromFile(
 			L"Engine//TexturePixelShader.hlsl", //シェーダーのファイル
@@ -176,18 +175,6 @@ namespace ShaderManager {
 		);
 
 		D3DCompileFromFile(
-			L"Engine//GrayPixelShader.hlsl", //シェーダーのファイル
-			nullptr,
-			D3D_COMPILE_STANDARD_FILE_INCLUDE,
-			"main", //シェーダーのメイン関数
-			"ps_5_0", //シェーダーの種類
-			D3DCOMPILE_ENABLE_STRICTNESS, //シェーダーコンパイルオプション
-			0, //オプション
-			&grayPsBlob, //コンパイルしたデータを指定する
-			NULL //コンパイル失敗時のデータを保存する
-		);
-
-		D3DCompileFromFile(
 			L"Engine//DebugVertexShader.hlsl",
 			nullptr,
 			D3D_COMPILE_STANDARD_FILE_INCLUDE,
@@ -208,16 +195,6 @@ namespace ShaderManager {
 			psBlob->GetBufferPointer(), psBlob->GetBufferSize(),
 			NULL,
 			&pixelShader_);
-
-		DirectX3DManager::GetDevice()->CreatePixelShader(
-			grayPsBlob->GetBufferPointer(), grayPsBlob->GetBufferSize(),
-			NULL,
-			&grayPixelShader_);
-
-		DirectX3DManager::GetDevice()->CreatePixelShader(
-			psBlobDebug->GetBufferPointer(), psBlobDebug->GetBufferSize(),
-			NULL,
-			&pixelDebugShader_);
 
 		/// 参考：https://learn.microsoft.com/ja-jp/windows/win32/api/d3d11/ns-d3d11-d3d11_input_element_desc
 		D3D11_INPUT_ELEMENT_DESC layout[] = {

@@ -59,7 +59,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 		else {
 			auto renderTargetView = GetRenderTargetView();
-			GetContext()->PSSetShader(ShaderManager::grayPixelShader_,  nullptr, 0);
 			GetContext()->OMSetRenderTargets(1, &renderTargetView, DirectX3DManager::GetDepthView());
 			GetContext()->ClearRenderTargetView(renderTargetView, GameEngine::BACKGROUND_COLOR);
 			GetContext()->ClearDepthStencilView(DirectX3DManager::GetDepthView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
