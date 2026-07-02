@@ -3,6 +3,7 @@ cbuffer ConstantBuffer : register(b0)
     matrix wvpMat;
     float4 diffUse;
     bool isTexture;
+    bool isGray;
 }
 
 struct VSInput

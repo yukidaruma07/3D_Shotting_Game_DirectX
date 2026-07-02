@@ -24,6 +24,8 @@ private:
 	IWICBitmapFrameDecode* pFrame = nullptr;
 	IWICFormatConverter* pConverter = nullptr;
 	Vertex vertices_[6];
+
+	bool isGray_;
 public:
 	Image(const std::string& path, const float leftX, const float leftY);
 	~Image() {};
@@ -31,4 +33,7 @@ public:
 	void Update() override;
 	void Draw() override;
 	void Release() override;
+
+	bool IsGray() const { return isGray_; }
+	void SetGray(bool flag) { isGray_ = flag; }
 };

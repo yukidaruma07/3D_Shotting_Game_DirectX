@@ -20,5 +20,8 @@ public:
 
 	bool IsClicked() const { return isClicked_; }
 	bool IsFocused() const { return isFocused_; }
+
+	bool IsGray() const { return image_->IsGray(); }
+	void SetGray(bool flag) { image_->SetGray(flag); }
 };
 

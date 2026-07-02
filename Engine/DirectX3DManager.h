@@ -11,7 +11,9 @@
 struct ConstantBuffer {
 	DirectX::XMMATRIX wvpMat = DirectX::XMMatrixIdentity(); /// World行列、View行列、Projection行列を合わせた行列
 	DirectX::XMFLOAT4 diffUse = {};							/// マテリアルの色
-	bool isTexture;											/// テクスチャがあるか
+	int isTexture;											/// テクスチャがあるか
+	int isGray;											/// グレーにするか
+	int padding[2];
 };
 
 /// <summary>

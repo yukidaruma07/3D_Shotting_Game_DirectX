@@ -30,8 +30,26 @@ void TitleScene::Update() {
 	if (startButton_->IsClicked()) {
 		SceneManager::ChangeScene("RunningScene");
 	}
+	if (startButton_->IsFocused()) {
+		startButton_->SetGray(false);
+		startButton_->SetScale({1.1f, 1.1f, 1.1f});
+	}
+	else {
+		startButton_->SetGray(true);
+		startButton_->SetScale({ 1.0f, 1.0f, 1.0f });
+	}
+
+
 	if (exitButton_->IsClicked()) {
 		GameEngine::AppExit();
+	}
+	if (exitButton_->IsFocused()) {
+		exitButton_->SetGray(false);
+		exitButton_->SetScale({ 1.1f, 1.1f, 1.1f });
+	}
+	else {
+		exitButton_->SetGray(true);
+		exitButton_->SetScale({ 1.0f, 1.0f, 1.0f });
 	}
 }
 

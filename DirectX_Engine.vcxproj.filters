@@ -10,9 +10,6 @@
     <FxCompile Include="Engine\TexturePixelShader.hlsl">
       <Filter>Engine\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="GrayPixelShader.hlsl">
-      <Filter>Engine\Shader</Filter>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ImGUI\imgui.cpp">
