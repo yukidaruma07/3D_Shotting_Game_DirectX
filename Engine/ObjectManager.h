@@ -5,7 +5,12 @@
 namespace ObjectManager {
     inline std::vector<BaseObject*> objList;
 
-    void AddObject(BaseObject* obj);
+    /// <summary>
+    /// オブジェクトを追加する関数
+    /// </summary>
+    /// <param name="obj">追加したいオブジェクト</param>
+    /// <returns>オブジェクトの初期化が完了すると、追加したオブジェクトのポインタを返します</returns>
+    BaseObject* AddObject(BaseObject* obj);
     void RemoveObject(BaseObject* obj);
     void ClearObject();
     void UpdateManager();
