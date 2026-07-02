@@ -7,4 +7,7 @@ namespace GameEngine {
 
 	HWND GetWindowHandle();
 	float GetDeltaTime();
+
+	void AppExit();
+	bool CanExit();
 }

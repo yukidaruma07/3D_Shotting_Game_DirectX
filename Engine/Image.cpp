@@ -139,9 +139,12 @@ void Image::Update() {
 	XMMATRIX rotMat = XMMatrixRotationZ(rotation_.z) * XMMatrixRotationX(rotation_.x) * XMMatrixRotationY(rotation_.y);
 	XMMATRIX transMat = XMMatrixTranslation(postion_.x, postion_.y, postion_.z);
 	XMMATRIX world = scaleMat * rotMat * transMat;
-	XMMATRIX view = camera->getMatrix();
-	XMMATRIX projection = camera->GetProjection();
-
+	XMMATRIX view = XMMatrixIdentity();
+	XMMATRIX projection = XMMatrixOrthographicOffCenterLH(
+		0.0f, 1280.0f,
+		720.0f, 0.0f,
+		0.0f, 100.0f
+	);
 	ConstantBuffer cb = {};
 	cb.wvpMat = XMMatrixTranspose(world * view * projection);
 	cb.diffUse = { 1.0f, 0.0f, 0.0f, 1.0f };

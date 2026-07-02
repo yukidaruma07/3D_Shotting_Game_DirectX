@@ -26,6 +26,7 @@ using namespace DirectX3DManager;
 namespace GameEngine {
 	HWND hwnd = {};
 	float deltaTime = 0.0f;
+	bool IsExitable = false;
 
 	HWND GetWindowHandle() {
 		return hwnd;
@@ -33,6 +34,14 @@ namespace GameEngine {
 
 	float GetDeltaTime() {
 		return deltaTime;
+	}
+
+	void AppExit() {
+		IsExitable = true;
+	}
+
+	bool CanExit() {
+		return IsExitable;
 	}
 }
 
@@ -53,6 +62,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	MSG msg = {};
 	while (msg.message != WM_QUIT) {
+		if (GameEngine::CanExit()) {
+			break;
+		}
+
 		if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE)) {
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
@@ -81,11 +94,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			ObjectManager::UpdateManager();
 
 			#ifdef _DEBUG				
+				auto point = InputManager::GetMousePoint();
 				auto currentScene = SceneManager::GetCurrentScene();
 				auto currentCamera = CameraManager::getCurentCamera();
 				auto cameraPos = currentCamera->getCameraPostion();
 				auto targetPos = currentCamera->getFoucsPostion();
 				ImGui::Begin("Main");
+				ImGui::Text("Point: %d, %d", point.x, point.y);
 				ImGui::Text("Scene: %s", currentScene == nullptr ? "" : currentScene->GetName().c_str());
 				ImGui::Text("DeltaTime: %2.2f", GameEngine::GetDeltaTime());
 				ImGui::Text("Camera: %s", currentCamera == nullptr ? "" : currentCamera->getName().c_str());
