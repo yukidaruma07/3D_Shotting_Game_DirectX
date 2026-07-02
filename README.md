@@ -5,7 +5,11 @@
 
 # 動作イメージ（7/2時点）
 ## タイトル画面
-<img width="1261" height="712" alt="image" src="https://github.com/user-attachments/assets/4c26b602-f100-4920-a951-dde93c605a81" />
+* ボタンはフォーカスされていないと、グレーになるようにしています
+* ボタンがフォーカスされていると、大きくなるようにしています
+<img width="40%" height="40%" alt="image" src="https://github.com/user-attachments/assets/32535ffb-ad59-4301-b1c2-1ecd42cbad67" />
+<img width="40%" height="40%" alt="image" src="https://github.com/user-attachments/assets/267877c3-8aed-4693-8a82-1b9a9041198f" />
+
 ## ゲーム画面
 <img width="1658" height="716" alt="image" src="https://github.com/user-attachments/assets/c57ae5da-fc55-44a5-9980-7a470e684c54" />
 
