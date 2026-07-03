@@ -49,10 +49,31 @@ public:
 	//ID3D11Buffer* GetConstantBuffer() const { return pConstantBuffer_; }
 
 	void Init() override;
+
+	/// <summary>
+	/// 頂点を初期化する関数
+	/// </summary>
+	/// <param name="mesh">読み込むFBXのメッシュ</param>
 	void InitVertex(fbxsdk::FbxMesh* mesh);
+
+	/// <summary>
+	/// インデックスバッファを初期化する関数
+	/// </summary>
+	/// <param name="mesh">読み込むFBXのメッシュ</param>
 	void InitIndex(fbxsdk::FbxMesh* mesh);
+
+	/// <summary>
+	/// コンスタントバッファを初期化する関数
+	/// </summary>
 	void InitConstantBuffer();
+
+	/// <summary>
+	/// マテリアルを初期化する関数
+	/// </summary>
+	/// <param name="node">FBXのノード</param>
 	void InitMaterial(fbxsdk::FbxNode* node);
+
+
 	void Update() override;
 	void Draw() override;
 	void Release() override;
