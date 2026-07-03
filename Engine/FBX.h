@@ -30,6 +30,7 @@ private:
 
 	FbxManager* fbxManager_;
 	FbxImporter* fbxImporter_;
+	FbxSkin* pSkinInfo_;
 	std::vector<std::vector<int>> index_;
 	std::vector<int> indexMaterialCount_;
 	std::vector<ID3D11Buffer*> pMaterialConstantBuffers_;
@@ -73,6 +74,7 @@ public:
 	/// <param name="node">FBXのノード</param>
 	void InitMaterial(fbxsdk::FbxNode* node);
 
+	void InitSkeleton(fbxsdk::FbxMesh* mesh);
 
 	void Update() override;
 	void Draw() override;

@@ -62,6 +62,7 @@ void FBX::Init() {
 	InitIndex(mesh);		//インデックスバッファを初期化する
 	InitConstantBuffer();	//コンスタントバッファ（GPUに送るデータ）を初期化する
 	InitMaterial(node);		//マテリアルを初期化する
+	InitSkeleton(mesh);
 }
 
 void FBX::InitVertex(FbxMesh* mesh) {
@@ -175,6 +176,12 @@ void FBX::InitMaterial(fbxsdk::FbxNode* node) {
 			materials_[i].texture = nullptr;	// 無いので、nullptrにする
 		}
 	}
+}
+
+void FBX::InitSkeleton(fbxsdk::FbxMesh* mesh) {
+	FbxDeformer* pDeformer = mesh->GetDeformer(0);
+	if (pDeformer == nullptr) return;
+	pSkinInfo_ = (FbxSkin*)pDeformer;
 }
 
 void FBX::Update() {
