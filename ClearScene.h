@@ -3,6 +3,7 @@
 
 class ClearScene : public BaseScene {
 private:
+    float count_;
 public:
     ClearScene();
     ~ClearScene();

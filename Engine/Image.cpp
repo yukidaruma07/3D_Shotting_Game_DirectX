@@ -31,6 +31,7 @@ Image::Image(const std::string& path, const float leftX, const float leftY)
 	vertices_[4] = { {leftX, leftY, 0.0f }, { 1,1,0,1 }, { 1, 1 } }; // 右下
 	vertices_[5] = { {0.0f, leftY, 0.0f}, {1,0,0,1}, {0, 1} }; // 左下
 
+	isGray_ = false;
 }
 
 void Image::Init() {
@@ -62,6 +63,20 @@ void Image::Init() {
 	);
 	pConverter->GetSize(&width_, &height_);
 
+	//参考： https://learn.microsoft.com/ja-jp/windows/win32/api/d3d11/ns-d3d11-d3d11_texture2d_desc
+	D3D11_TEXTURE2D_DESC desc = {};
+	desc.Width = width_;
+	desc.Height = height_;
+	desc.MipLevels = 1;
+	desc.ArraySize = 1;
+	desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	desc.SampleDesc.Count = 1;
+	desc.SampleDesc.Quality = 0;
+	desc.Usage = D3D11_USAGE_DEFAULT;
+	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+	desc.CPUAccessFlags = 0;
+	desc.MipLevels = 1;
+
 	std::vector<BYTE> TextureData;
 	size_t rowBytes = static_cast<size_t>(width_) * 4;
 	size_t TextureSize = rowBytes * static_cast<size_t>(height_);
@@ -72,6 +87,12 @@ void Image::Init() {
 	D3D11_SUBRESOURCE_DATA textureData = {};
 	textureData.pSysMem = TextureData.data();
 	textureData.SysMemPitch = static_cast<UINT>(rowBytes);
+
+	GetDevice()->CreateTexture2D(
+		&desc,
+		&textureData,
+		&texture2D_
+	);
 
 	// 参考： https://learn.microsoft.com/ja-jp/windows/win32/api/d3d11/ns-d3d11-d3d11_shader_resource_view_desc
 	D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc = {};
@@ -119,11 +140,17 @@ void Image::Update() {
 	XMMATRIX rotMat = XMMatrixRotationZ(rotation_.z) * XMMatrixRotationX(rotation_.x) * XMMatrixRotationY(rotation_.y);
 	XMMATRIX transMat = XMMatrixTranslation(postion_.x, postion_.y, postion_.z);
 	XMMATRIX world = scaleMat * rotMat * transMat;
-	XMMATRIX view = camera->getMatrix();
-	XMMATRIX projection = camera->GetProjection();
-
+	XMMATRIX view = XMMatrixIdentity();
+	XMMATRIX projection = XMMatrixOrthographicOffCenterLH(
+		0.0f, 1280.0f,
+		720.0f, 0.0f,
+		0.0f, 100.0f
+	);
 	ConstantBuffer cb = {};
 	cb.wvpMat = XMMatrixTranspose(world * view * projection);
+	cb.diffUse = { 1.0f, 0.0f, 0.0f, 1.0f };
+	cb.isTexture = true;
+	cb.isGray = isGray_;
 	GetContext()->UpdateSubresource(constantBuffer_, 0, nullptr, &cb, 0, 0);
 }
 
@@ -140,6 +167,7 @@ void Image::Draw() {
 	GetContext()->PSSetShaderResources(0, 1, &shaderResourceView_);
 	GetContext()->PSSetSamplers(0, 1, &samplerState_);
 	GetContext()->VSSetConstantBuffers(0, 1, &constantBuffer_);
+	GetContext()->PSSetConstantBuffers(0, 1, &constantBuffer_);
 
 	GetContext()->Draw(6, 0);
 

@@ -3,6 +3,7 @@
 
 class RunningScene : public BaseScene {
 private:
+    float time_;
 public:
     RunningScene();
     ~RunningScene();

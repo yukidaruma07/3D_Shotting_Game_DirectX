@@ -1,9 +1,10 @@
 #include "ObjectManager.h"
 #include "CircleCollider.h"
 
-void ObjectManager::AddObject(BaseObject* obj) {
+BaseObject* ObjectManager::AddObject(BaseObject* obj) {
     objList.push_back(obj);
     obj->Init();
+    return obj;
 }
 
 void ObjectManager::RemoveObject(BaseObject* obj) {

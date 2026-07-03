@@ -108,6 +108,9 @@
     <ClCompile Include="Enemy.cpp">
       <Filter>Source\Object</Filter>
     </ClCompile>
+    <ClCompile Include="ImageButton.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImGUI\imgui.h">
@@ -219,6 +222,9 @@
       <Filter>Source\Object</Filter>
     </ClInclude>
     <ClInclude Include="Enemy.h">
+      <Filter>Source\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="ImageButton.h">
       <Filter>Source\Object</Filter>
     </ClInclude>
   </ItemGroup>
