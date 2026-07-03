@@ -4,19 +4,29 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
+namespace InputManager {
+    inline LPDIRECTINPUT8 input_ = {};
+    inline LPDIRECTINPUTDEVICE8 inputDevice_ = {};
+    inline BYTE keys_[256] = {};
+
+    inline LPDIRECTINPUTDEVICE8 mouseInputDevice_ = {};
+    inline DIMOUSESTATE mouseState_ = {};
+    inline POINT mousePoint_ = {};
+}
+
 int InputManager::initialize(HINSTANCE hInstance, HWND hwnd) {
     HRESULT result = {};
-    result = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (VOID**)&input_, nullptr);
+    result = DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (VOID**)&input_, nullptr);   // DirectInputを初期化する関数
 
-    result = input_->CreateDevice(GUID_SysKeyboard, &inputDevice_, nullptr);
-    result = inputDevice_->SetDataFormat(&c_dfDIKeyboard);
+    result = input_->CreateDevice(GUID_SysKeyboard, &inputDevice_, nullptr);    //DirectInputのキーボードを作る関数
+    result = inputDevice_->SetDataFormat(&c_dfDIKeyboard);                                      // デバイスがキーボードであることを示す
     result = inputDevice_->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
 
-    result = input_->CreateDevice(GUID_SysMouse, &mouseInputDevice_, nullptr);
-    result = mouseInputDevice_->SetDataFormat(&c_dfDIMouse);
-    result = mouseInputDevice_->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);
+    result = input_->CreateDevice(GUID_SysMouse, &mouseInputDevice_, nullptr);  // DirectInputのマウスを作る関数
+    result = mouseInputDevice_->SetDataFormat(&c_dfDIMouse);                                    // デバイスがマウスであることを示す
+    result = mouseInputDevice_->SetCooperativeLevel(hwnd, DISCL_NONEXCLUSIVE | DISCL_FOREGROUND);   
 
-    return 0;
+    return 0;   // 最後まで成功すると0を返す
 }
 
 void InputManager::update() {
