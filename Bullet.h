@@ -5,7 +5,7 @@
 
 class Bullet : public BaseObject {
 private:
-	FBX* fbxModel_;
+	static FBX* fbxModel_;
 public:
 	Bullet(DirectX::XMFLOAT3 postion);
 	~Bullet();

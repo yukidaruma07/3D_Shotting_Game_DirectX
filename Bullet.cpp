@@ -1,21 +1,23 @@
 #include "Bullet.h"
 #include "Engine//CircleCollider.h"
 
+FBX* Bullet::fbxModel_ = nullptr;
+
 Bullet::Bullet(DirectX::XMFLOAT3 postion)
 	: BaseObject("Bullet") {
 	postion_ = postion;
 	velocity_ = { 0.1f, 0.1f, 0.1f };
 	scale_ = { 0.5, 0.5, 0.5 };
-	fbxModel_ = nullptr;
 }
 
 Bullet::~Bullet() {
-	delete fbxModel_;
 }
 
 void Bullet::Init() {
-	fbxModel_ = new FBX("Asset/bullet.fbx");
-	fbxModel_->Init();
+	if (fbxModel_ == nullptr) {
+		fbxModel_ = new FBX("Asset/bullet.fbx");
+		fbxModel_->Init();
+	}
 	colliderList.push_back(new CircleCollider(this, 1.0f));
 }
 
