@@ -20,3 +20,7 @@
 # ライブラリ・使用素材
 * Blender（モデル作成）
 * ImGUI（ライブラリ）
+
+# 関連項目
+* 2Dのシューティングゲーム： https://github.com/programmer-2025/2D_Shooting_DirectX
+* このゲームのベース： https://github.com/programmer-2025/DirectX_Engine
