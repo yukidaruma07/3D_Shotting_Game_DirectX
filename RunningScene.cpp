@@ -7,6 +7,7 @@
 #include "Engine/DirectX2DManager.h"
 #include "GameEngine.hpp"
 #include "Engine/SceneManager.h"
+#include "Ground.h"
 
 using namespace DirectX2DManager;
 
@@ -25,7 +26,7 @@ RunningScene::~RunningScene() {
 void RunningScene::Init() {
 	ObjectManager::AddObject(new Enemy({ 0, 0, 20 }));
 	ObjectManager::AddObject(new Player({}));
-	//ObjectManager::AddObject(new Bullet({}));
+	ObjectManager::AddObject(new Ground());
 }
 
 void RunningScene::Update() {

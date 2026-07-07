@@ -42,6 +42,8 @@ private:
 	std::vector<MATERIAL> materials_; //マテリアルの配列データ（※数は分からないため、ポインタ）
 	std::vector<Vertex> vertices_; //頂点の配列データ（※数は分からないため、ポインタ）
 public:
+	DirectX::XMMATRIX world_;
+
 	FBX(const std::string fName);
 	~FBX();
 
@@ -79,5 +81,10 @@ public:
 	void Update() override;
 	void Draw() override;
 	void Release() override;
+
+	/// <summary>
+	/// レイキャストを行う関数
+	/// </summary>
+	static bool Raycast(FBX* fbx, DirectX::XMFLOAT3 rayPos, DirectX::XMFLOAT3 rayDir, float& distance);
 };
 

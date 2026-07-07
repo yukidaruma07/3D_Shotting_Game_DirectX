@@ -8,6 +8,7 @@
 #include "CameraManager.h"
 #include "../GameEngine.hpp"
 #include "LoggerManager.h"
+#include <DirectXCollision.h>
 
 using namespace DirectX3DManager;
 
@@ -189,13 +190,13 @@ void FBX::Update() {
 	XMMATRIX scaleMat = XMMatrixScaling(scale_.x, scale_.y, scale_.z);
 	XMMATRIX rotMat = XMMatrixRotationZ(rotation_.z) * XMMatrixRotationX(rotation_.x) * XMMatrixRotationY(rotation_.y);
 	XMMATRIX transMat = XMMatrixTranslation(postion_.x, postion_.y, postion_.z);
-	XMMATRIX world = scaleMat * rotMat * transMat;
+	world_ = scaleMat * rotMat * transMat;
 	XMMATRIX view = currentCamera->getMatrix();
 	XMMATRIX projection = currentCamera->GetProjection();
 
 	for (int i = 0; i < materialCount_; i++) {
 		ConstantBuffer cb = {};
-		cb.wvpMat = XMMatrixTranspose(world * view * projection);
+		cb.wvpMat = XMMatrixTranspose(world_ * view * projection);
 		cb.diffUse = materials_[i].diffuse;
 		cb.isTexture = materials_[i].texture != nullptr ? TRUE : FALSE;
 		GetContext()->UpdateSubresource(pMaterialConstantBuffers_[i], 0, nullptr, &cb, 0, 0);
@@ -245,4 +246,36 @@ void FBX::Draw() {
 
 void FBX::Release() {
 
+}
+
+bool FBX::Raycast(FBX* fbx, DirectX::XMFLOAT3 rayPos, DirectX::XMFLOAT3 rayDir, float& distance) {
+	auto rayOrigin = DirectX::XMLoadFloat3(&rayPos);
+	auto rayDirection = DirectX::XMLoadFloat3(&rayDir);
+
+	bool hit = false;
+
+	for (int v = 0; v < fbx->vertexCount_; v += 3) {
+		auto vertex0 = DirectX::XMLoadFloat3(&fbx->vertices_[v].postion);
+		auto vertex1 = DirectX::XMLoadFloat3(&fbx->vertices_[v + 1].postion);
+		auto vertex2 = DirectX::XMLoadFloat3(&fbx->vertices_[v + 2].postion);
+
+		vertex0 = XMVector3TransformCoord(vertex0, fbx->world_);
+		vertex1 = XMVector3TransformCoord(vertex1, fbx->world_);
+		vertex2 = XMVector3TransformCoord(vertex2, fbx->world_);
+
+		float dis;
+		if (DirectX::TriangleTests::Intersects(
+			rayOrigin,
+			rayDirection,
+			vertex0,
+			vertex1,
+			vertex2,
+			dis))
+		{
+			distance = dis;
+			hit = true;
+		}
+	}
+
+	return hit;
 }

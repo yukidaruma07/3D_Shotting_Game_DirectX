@@ -10,9 +10,6 @@
     <FxCompile Include="Engine\TexturePixelShader.hlsl">
       <Filter>Engine\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="GrayPixelShader.hlsl">
-      <Filter>Engine\Shader</Filter>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ImGUI\imgui.cpp">
@@ -109,6 +106,9 @@
       <Filter>Source\Object</Filter>
     </ClCompile>
     <ClCompile Include="ImageButton.cpp">
+      <Filter>Source\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Ground.cpp">
       <Filter>Source\Object</Filter>
     </ClCompile>
   </ItemGroup>
@@ -225,6 +225,9 @@
       <Filter>Source\Object</Filter>
     </ClInclude>
     <ClInclude Include="ImageButton.h">
+      <Filter>Source\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Ground.h">
       <Filter>Source\Object</Filter>
     </ClInclude>
   </ItemGroup>

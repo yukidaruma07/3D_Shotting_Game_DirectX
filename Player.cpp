@@ -2,6 +2,7 @@
 #include "Engine/InputManager.h"
 #include "Engine/ObjectManager.h"
 #include "Bullet.h"
+#include "Ground.h"
 using namespace DirectX;
 
 Player::Player(DirectX::XMFLOAT3 postion)
@@ -45,6 +46,15 @@ void Player::Update() {
 	}
 	if (InputManager::IsPushKey(DIK_D)) {
 		rotation_.z += DirectX::XMConvertToRadians(1.0f);
+	}
+
+	float distance_ = 0.0f;
+	Ground* ground = ObjectManager::GetDrawObject<Ground>();
+	if (FBX::Raycast(ground->GetFBX(), postion_, {0, -1, 0}, distance_)) {
+		postion_.y -= distance_;
+	}
+	else {
+
 	}
 
 	if (fbxModel_ != nullptr) {

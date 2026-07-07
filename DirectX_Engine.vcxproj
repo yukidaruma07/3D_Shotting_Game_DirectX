@@ -143,6 +143,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Bullet.cpp" />
+    <ClCompile Include="Ground.cpp" />
     <ClCompile Include="ImageButton.cpp" />
     <ClCompile Include="ClearScene.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -177,6 +178,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bullet.h" />
+    <ClInclude Include="Ground.h" />
     <ClInclude Include="ImageButton.h" />
     <ClInclude Include="ClearScene.h" />
     <ClInclude Include="Enemy.h" />
